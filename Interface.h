@@ -5,6 +5,7 @@
 //Struct de un proceso
 typedef struct proceso {
     int proceso;
+    int carga;
     int tiempo;
 } proceso;
 
@@ -17,10 +18,18 @@ void leerArchivo(char* nombre_archivo);
 
 void imprimirMatriz(int** matriz, int filas, int columnas);
 
-proceso crearProceso(proceso nuevo_proceso);
+void imprimirLista(proceso* lista, int n, int tiempo);
 
-int evaluarExistenciaProceso(proceso* lista_proceso, int n, int proceso);
+proceso crearProceso(proceso nuevo_proceso, int proceso, int carga, int tiempo);
 
-int evaluarEstadoProceso(proceso* lista_procesos, int n);
+int evaluarExistenciaProceso(proceso* lista, int n, int proceso);
 
-void restarTiempoProceso(proceso* lista_procesos, int n);
+int evaluarEstadoProceso(proceso* lista, int n);
+
+void restarTiempoProceso(proceso* lista, int n, int proceso);
+
+int terminoProceso(proceso* lista, int n);
+
+void agregarProcesoLista(proceso* lista, int n, proceso proceso);
+
+proceso* eliminarProceso(proceso* lista, int n, proceso proceso);

@@ -7,11 +7,13 @@
 #define nombre_archivo_laberinto "procesamiento_3_3.IN"
 
 //Variables Globales
-int p1 = 0, p2 = 0, p3 = 0; //Estado de ejecucion proceso 1, 2 y 3.
+//int p1 = 0, p2 = 0, p3 = 0; //Estado de ejecucion proceso 1, 2 y 3.
 int fila = 0, columna = 0, n_proceso = 0; //Variables que almacenan la cantidad de filas y columnas de la matriz.
 proceso* lista_procesos = NULL;
 int** matriz = NULL; //Matriz que almacena los datos del archivo.
 int tiempo = 0; //Variable que almacena el tiempo
+
+// Nota: 1 == True, 0 == False.
 
 /*-----------OPERACIONES-----------*/
 
@@ -67,60 +69,89 @@ void imprimirMatriz(int** matriz, int filas, int columnas) {
     }
 }
 
+void imprimirLista(proceso* lista, int n, int tiempo) {
+    int i = 0;
+    if (lista != NULL) {
+        printf("---Lista de Procesos en Ejecucion---\n");
+        for (i = 0; i < n; i++) {
+            printf("Tiempo=%d -> [Proceso=%d, Carga=%d, Tiempo=%d] ", tiempo, lista[i].proceso, lista[i].carga, lista[i].tiempo);
+        }
+    } else {
+        printf("[imprimirLista]Error: lista_procesos no ha sido inicializada.\n");
+    }
+}
+
 int contadorTiempo(int** matriz, int filas, int columnas) {
     return 0;
 }
 
-proceso crear_proceso(proceso nuevo_proceso, int proceso, int tiempo) {
+proceso crearProceso(proceso nuevo_proceso, int proceso, int carga, int tiempo) {
     nuevo_proceso.proceso = proceso;
+    nuevo_proceso.carga = carga;
     nuevo_proceso.tiempo = tiempo;
     printf("---Nuevo Proceso Creado---\n");
-    printf("Proceso = %d\n", nuevo_proceso.proceso);
-    printf("Tiempo = %d\n", nuevo_proceso.tiempo);
+    printf("Proceso=%d, Carga=%d, Tiempo=%d\n", nuevo_proceso.proceso, nuevo_proceso.carga, nuevo_proceso.tiempo);
     return nuevo_proceso;
 }
 
-int evaluarExistenciaProceso(proceso* lista_proceso, int n, int proceso) {
+int evaluarExistenciaProceso(proceso* lista, int n, int proceso) {
     int i;
     for (i = 0; i < n; i++) {
-        if (proceso == lista_proceso[i].proceso) {
+        if (proceso == lista[i].proceso) {
             return 1;
         }
     }
     return 0;
 }
 
-void restarTiempoProceso(proceso* lista_proceso, int n, int proceso) {
+void restarTiempoProceso(proceso* lista, int n, int proceso) {
     int i;
     for (i = 0; i < n; i++) {
-        if (proceso == lista_proceso[i].proceso) {
-            lista_proceso[i].tiempo -= 1;
+        if (proceso == lista[i].proceso) {
+            lista[i].tiempo -= 1;
         }
     }
 }
 
+int terminoProceso(proceso* lista, int n) {
+    int i;
+    for (i = 0; i < n; i++) {
+        if (lista[i].tiempo != 0) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+void agregarProcesoLista(proceso* lista, int n, proceso proceso) {
+    int i;
+    for (i = 0; i < n; i++) {
+        if (lista[i].carga == 0 && lista[i].proceso == 0 && lista[i].tiempo == 0) {
+            lista[i] = proceso;
+        }
+    }
+}
 
 //int main(char* argv[]){
 int main(){
     proceso nuevo_proceso = {};
+    int condicion = 1;
     int i = 0, j = 0;
     //int** matriz = leerArchivo(argv[1]);
-    leerArchivo(nombre_archivo_laberinto);
-    //TODO: Idea asignar todos los procesos distintos a la lista al inicio y hacerla dinamica para agregar procesos y eliminar procesos terminados (importante para avanzar)
-    lista_procesos[0] = crear_proceso(nuevo_proceso, matriz[i][j], matriz[i][j+1]);
-    void restarTiempoProceso(proceso* lista_proceso, int n, int proceso);
+    leerArchivo(nombre_archivo_laberinto); //Lee el archivo y asigna los valores a la matriz.
+    imprimirLista(lista_procesos, n_proceso, tiempo); //Imprime lista inicial
 
     //int** matrizAux = matriz;
-
-    while (matriz[2][5] != 0) { //TODO: Cambiar por una mejor condiciones de parada, que sea transversal a todo tipo de matriz
-        if (evaluarExistenciaProceso(lista_procesos, n_proceso, matriz[i][j]) == 0) {
-            nuevo_proceso = {};
-            lista_procesos[i] = crear_proceso(nuevo_proceso, matriz[i][j], matriz[i][j+1]);
-            //TODO: Probar si 1) se agrega proceso a lista proceso, si evalua que exista y si resta el tiempo
-            //TODO: Como ir avanzando entre filas de forma asincrona
-        }
-        imprimirMatriz(matriz, fila, columna);
-        matriz[2][5] = 0;
+    //while (terminoProceso(lista_procesos, n_proceso) == 1) { //Mientras no terminen los procesos.
+    while (condicion) { //TODO: Eliminar luego de probar
+        tiempo += 1; //Aumenta el tiempo.
+        if (evaluarExistenciaProceso(lista_procesos, n_proceso, matriz[i][j]) == 0) { //Si no existe el proceso en la lista de procesos, se crea.
+            agregarProcesoLista(lista_procesos, n_proceso, crearProceso(nuevo_proceso, matriz[i][j], i+1, matriz[i][j+1])); //i+1 = Carga 1, 2, 3, ..., n
+        } //TODO: Evaluar si es conveniente tener los procesos iniciales antes del while y en while solo evaluar
+        i++;
+        condicion = 0;
+        //TODO: Probar si 3) si resta el tiempo
+        //TODO: Como ir avanzando entre filas de forma asincrona?
     }
     return 0;
 }   
