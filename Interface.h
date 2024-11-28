@@ -6,4 +6,6 @@
 // leer_archivo(nombre_archivo) lee el archivo con nombre nombre_archivo y retorna un puntero a FILE
 // orden de complejidad: O(1)
 
-int** leerArchivo(char* nombre_archivo);
+void leerArchivo(char* nombre_archivo);
+
+void imprimirMatriz(int** matriz, int filas, int columnas);
