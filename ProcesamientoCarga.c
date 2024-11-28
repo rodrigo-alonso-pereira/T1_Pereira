@@ -9,6 +9,7 @@
 //Variables Globales
 int p1 = 0, p2 = 0, p3 = 0; //Estado de ejecucion proceso 1, 2 y 3.
 int fila = 0, columna = 0, n_proceso = 0; //Variables que almacenan la cantidad de filas y columnas de la matriz.
+proceso* lista_procesos = NULL;
 int** matriz = NULL; //Matriz que almacena los datos del archivo.
 int tiempo = 0; //Variable que almacena el tiempo
 
@@ -37,6 +38,7 @@ void leerArchivo(char* nombre_archivo) {
         if (i == 0){
             sscanf(linea_temp, "%d %d\r",&fila, &n_proceso); //Lee la primera linea y guarda los valores en fila y col.
             columna = n_proceso * 2; //Proceso tiene numero y tiempo.
+            lista_procesos = (proceso*)malloc(sizeof(proceso) * n_proceso); //Reserva memoria para la lista de procesos.
             matriz = (int**) malloc(sizeof(int*) * fila); //Reserva memoria para las filas.
             for (int j = 0; j < fila; j++)
                 matriz[j] = (int*) malloc(sizeof(int) * (columna * 2)); //Reserva memoria para las columnas. (Col * 2) porque se guardan los nro. proceso y sus tiempos.
@@ -69,16 +71,56 @@ int contadorTiempo(int** matriz, int filas, int columnas) {
     return 0;
 }
 
+proceso crear_proceso(proceso nuevo_proceso, int proceso, int tiempo) {
+    nuevo_proceso.proceso = proceso;
+    nuevo_proceso.tiempo = tiempo;
+    printf("---Nuevo Proceso Creado---\n");
+    printf("Proceso = %d\n", nuevo_proceso.proceso);
+    printf("Tiempo = %d\n", nuevo_proceso.tiempo);
+    return nuevo_proceso;
+}
+
+int evaluarExistenciaProceso(proceso* lista_proceso, int n, int proceso) {
+    int i;
+    for (i = 0; i < n; i++) {
+        if (proceso == lista_proceso[i].proceso) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+void restarTiempoProceso(proceso* lista_proceso, int n, int proceso) {
+    int i;
+    for (i = 0; i < n; i++) {
+        if (proceso == lista_proceso[i].proceso) {
+            lista_proceso[i].tiempo -= 1;
+        }
+    }
+}
+
+
 //int main(char* argv[]){
 int main(){
-
+    proceso nuevo_proceso = {};
+    int i = 0, j = 0;
     //int** matriz = leerArchivo(argv[1]);
     leerArchivo(nombre_archivo_laberinto);
+    //TODO: Idea asignar todos los procesos distintos a la lista al inicio y hacerla dinamica para agregar procesos y eliminar procesos terminados (importante para avanzar)
+    lista_procesos[0] = crear_proceso(nuevo_proceso, matriz[i][j], matriz[i][j+1]);
+    void restarTiempoProceso(proceso* lista_proceso, int n, int proceso);
+
     //int** matrizAux = matriz;
-    int i = 0, j = 0;
-    while (matriz[2][5] != 0) {
-        if (matriz[i][j] )
+
+    while (matriz[2][5] != 0) { //TODO: Cambiar por una mejor condiciones de parada, que sea transversal a todo tipo de matriz
+        if (evaluarExistenciaProceso(lista_procesos, n_proceso, matriz[i][j]) == 0) {
+            nuevo_proceso = {};
+            lista_procesos[i] = crear_proceso(nuevo_proceso, matriz[i][j], matriz[i][j+1]);
+            //TODO: Probar si 1) se agrega proceso a lista proceso, si evalua que exista y si resta el tiempo
+            //TODO: Como ir avanzando entre filas de forma asincrona
+        }
         imprimirMatriz(matriz, fila, columna);
+        matriz[2][5] = 0;
     }
     return 0;
 }   
