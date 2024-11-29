@@ -7,6 +7,7 @@ typedef struct proceso {
     int proceso;
     int carga;
     int tiempo;
+    int secuencia;
 } proceso;
 
 /*-----------OPERACIONES-----------*/
@@ -20,16 +21,17 @@ void imprimirMatriz(int** matriz, int filas, int columnas);
 
 void imprimirLista(proceso* lista, int n, int tiempo);
 
-proceso crearProceso(proceso nuevo_proceso, int proceso, int carga, int tiempo);
+proceso crearProceso(proceso nuevo_proceso, int proceso, int carga, int tiempo, int secuencia);
 
-int evaluarExistenciaProceso(proceso* lista, int n, int proceso);
+int evaluarEjecucionProcesoCarga(proceso* lista, int n, int proceso, int carga);
 
-int evaluarEstadoProceso(proceso* lista, int n);
+void liberarProceso(proceso* lista, int posicion);
 
-void restarTiempoProceso(proceso* lista, int n, int proceso);
+void restarTiempoProceso(proceso* lista, int n, int proceso, int carga);
 
 int terminoProceso(proceso* lista, int n);
 
-void agregarProcesoLista(proceso* lista, int n, proceso proceso);
+void agregarProcesoLista(proceso* lista, int n, proceso proceso, int posicion);
 
-proceso* eliminarProceso(proceso* lista, int n, proceso proceso);
+int buscarProceso(proceso* lista, int n, int proceso);
+
