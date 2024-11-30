@@ -75,7 +75,7 @@ void imprimirLista(proceso* lista, int n, int tiempo) {
         printf("---Lista de Procesos en Ejecucion---\n");
         printf("Tiempo=%d -> ", tiempo);
         for (i = 0; i < n; i++) {
-            printf("[Proceso=%d, Carga=%d, Tiempo=%d, Secuencia=%d] ", lista[i].proceso, lista[i].carga, lista[i].tiempo, lista[i].secuencia);
+            printf("[[Carga=%d] => Proceso=%d, Tiempo=%d, Secuencia=%d] ", lista[i].carga, lista[i].proceso, lista[i].tiempo, lista[i].secuencia);
         }
         printf("\n");
     } else {
@@ -89,8 +89,8 @@ proceso crearProceso(proceso nuevo_proceso, int proceso, int carga, int tiempo, 
     nuevo_proceso.carga = carga;
     nuevo_proceso.tiempo = tiempo;
     nuevo_proceso.secuencia = secuencia;
-    printf("---Nuevo Proceso Creado---\n");
-    printf("Proceso=%d, Carga=%d, Tiempo=%d, Secuencia=%d\n", nuevo_proceso.proceso, nuevo_proceso.carga, nuevo_proceso.tiempo, nuevo_proceso.secuencia);
+    printf("*****Nuevo Proceso Creado*****\n");
+    printf("[Carga=%d] -> Proceso=%d, Tiempo=%d, Secuencia=%d\n", nuevo_proceso.carga, nuevo_proceso.proceso, nuevo_proceso.tiempo, nuevo_proceso.secuencia);
     return nuevo_proceso;
 }
 
@@ -164,36 +164,32 @@ int main(){
     imprimirLista(lista_procesos, n_proceso, tiempo); //Imprime lista inicial
 
     //int** matrizAux = matriz;
-    //while (terminoProceso(lista_procesos, n_proceso) == 1) { //Mientras no terminen los procesos.
     while (condicion) { //TODO: Eliminar luego de testear
+    //while (terminoProceso(lista_procesos, n_proceso) != 1) { //Mientras no terminen los procesos.
         tiempo += 1; //Aumenta el tiempo.
-        for (i = 0; i < n_proceso; i++) { // i avanza en filas
-            int secuencia_proceso = lista_procesos[i].secuencia; //indica secuencia(columna) proceso a evaluar
-            if (evaluarEjecucionProcesoCarga(lista_procesos, n_proceso, matriz[i][secuencia_proceso], i+1) == 1) { //Si existe proceso de una carga, se resta un tiempo al proceso
-                // Evaluar si tiempo es 1 -> se avanza en secuencia
-                if (lista_procesos[i].tiempo == 1) {
-                    nuevo_proceso = crearProceso(nuevo_proceso, matriz[i][secuencia_proceso+2], i+1, matriz[i][secuencia_proceso+3], secuencia_proceso+2);
-                    lista_procesos[i] = nuevo_proceso;
-                    matriz[i][secuencia_proceso + 1] = 0;
-                } else {
-                    restarTiempoProceso(lista_procesos, n_proceso, matriz[i][j], i+1); //TODO: Funciona primera vuelta por valor j (debe ser dependiente proceso.secuencia)
+        for (i = 0; i < n_proceso; i++) { // i avanza en filas de matriz
+            int secuencia_proceso = lista_procesos[i].secuencia; //indica secuencia(columna) del proceso a evaluar
+            if (evaluarEjecucionProcesoCarga(lista_procesos, n_proceso, matriz[i][secuencia_proceso], i+1) == 1) { //Si existe el proceso de una carga especifica
+                if (lista_procesos[i].tiempo == 1) { //Si el tiempo del proceso es 1
+                    nuevo_proceso = crearProceso(nuevo_proceso, matriz[i][secuencia_proceso+2], i+1, matriz[i][secuencia_proceso+3], secuencia_proceso+2); //Se crea un nuevo proceso
+                    lista_procesos[i] = nuevo_proceso; //se agrega nuevo_proceso en posicion de proceso anterior (logrando el avance en secuencia)
+                    matriz[i][secuencia_proceso + 1] = 0; //Marcar tiempo de proceso anterior como 0 en matriz
+                } else { //Si el tiempo del proceso es mayor a 1
+                    restarTiempoProceso(lista_procesos, n_proceso, matriz[i][secuencia_proceso], i+1);
                 }
-            } /*else {
-                if (buscarProceso(lista_procesos, n_proceso, matriz[i][secuencia_proceso])) {
-                    nuevo_proceso = crearProceso(nuevo_proceso, matriz[i][secuencia_proceso+1], i+1, matriz[i][secuencia_proceso+1], secuencia_proceso+2);
+            } else {
+                if (!buscarProceso(lista_procesos, n_proceso, matriz[i][secuencia_proceso])) { //Si no existe el proceso en la lista de procesos, se crea.
+                    nuevo_proceso = crearProceso(nuevo_proceso, matriz[i][secuencia_proceso], i+1, matriz[i][secuencia_proceso+1], secuencia_proceso);
                     agregarProcesoLista(lista_procesos, n_proceso, nuevo_proceso, i);
                 }
-            }*/
+            }
         }
         imprimirLista(lista_procesos, n_proceso, tiempo);
 
-        if (tiempo == 3) {
+        if (tiempo == 4) {
             condicion = 0;
         }
-        i++;
-
-        //TODO: Como ir avanzando entre filas de forma asincrona?
     }
     imprimirMatriz(matriz, fila, columna);
-    return 0;
+    return tiempo;
 }   
