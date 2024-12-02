@@ -1,0 +1,5 @@
+# ninja log v6
+22	38	1732743778711856079	T1_Pereira	b22d4f9a127bb5ea
+0	19	1732743735242627795	CMakeFiles/T1_Pereira.dir/main.c.o	7bc17bdd8088abb4
+1	23	1733001966552896928	build.ninja	6d0f9d71180d0b3e
+1	22	1732743778690855969	CMakeFiles/T1_Pereira.dir/ProcesamientoCarga.c.o	92188ec6c8f78f36

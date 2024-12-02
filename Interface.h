@@ -35,3 +35,4 @@ void agregarProcesoLista(proceso* lista, int n, proceso proceso, int posicion);
 
 int buscarProceso(proceso* lista, int n, int proceso);
 
+int buscarProcesoTiempo(proceso* lista, int n, int proceso, int tiempo);
