@@ -69,7 +69,7 @@ void imprimirMatriz(int** matriz, int filas, int columnas) {
     }
 }
 
-void imprimirLista(proceso* lista, int n, int tiempo) {
+void imprimirLista(proceso* lista, int n) {
     int i = 0;
     if (lista != NULL) {
         printf("---Lista de Procesos en Ejecucion---\n");

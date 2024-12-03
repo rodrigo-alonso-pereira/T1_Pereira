@@ -19,7 +19,9 @@ void leerArchivo(char* nombre_archivo);
 
 void imprimirMatriz(int** matriz, int filas, int columnas);
 
-void imprimirLista(proceso* lista, int n, int tiempo);
+void imprimirLista(proceso* lista, int n);
+
+void crearLista();
 
 proceso crearProceso(proceso nuevo_proceso, int proceso, int carga, int tiempo, int secuencia);
 

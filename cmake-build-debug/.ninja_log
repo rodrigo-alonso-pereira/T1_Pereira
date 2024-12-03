@@ -1,5 +1,25 @@
 # ninja log v6
 22	38	1732743778711856079	T1_Pereira	b22d4f9a127bb5ea
 0	19	1732743735242627795	CMakeFiles/T1_Pereira.dir/main.c.o	7bc17bdd8088abb4
-1	23	1733001966552896928	build.ninja	6d0f9d71180d0b3e
+1	23	1733257097231137581	build.ninja	6d0f9d71180d0b3e
 1	22	1732743778690855969	CMakeFiles/T1_Pereira.dir/ProcesamientoCarga.c.o	92188ec6c8f78f36
+0	26	1733257113465136448	CMakeFiles/JohnsonTrotter_algorithm.dir/JohnsonTrotter_algorithm.c.o	a2f2dc381816c339
+26	42	1733257113491136446	JohnsonTrotter_algorithm	399170beba33e8af
+0	26	1733257384950117499	CMakeFiles/JohnsonTrotter_algorithm.dir/JohnsonTrotter_algorithm.c.o	a2f2dc381816c339
+27	43	1733257384977117497	JohnsonTrotter_algorithm	399170beba33e8af
+1	27	1733257455317112588	CMakeFiles/JohnsonTrotter_algorithm.dir/JohnsonTrotter_algorithm.c.o	a2f2dc381816c339
+27	44	1733257455343112586	JohnsonTrotter_algorithm	399170beba33e8af
+1	26	1733257503648109214	CMakeFiles/JohnsonTrotter_algorithm.dir/JohnsonTrotter_algorithm.c.o	a2f2dc381816c339
+26	42	1733257503673109213	JohnsonTrotter_algorithm	399170beba33e8af
+1	27	1733257511354108677	CMakeFiles/JohnsonTrotter_algorithm.dir/JohnsonTrotter_algorithm.c.o	a2f2dc381816c339
+27	42	1733257511380108675	JohnsonTrotter_algorithm	399170beba33e8af
+0	27	1733257528997107445	CMakeFiles/JohnsonTrotter_algorithm.dir/JohnsonTrotter_algorithm.c.o	a2f2dc381816c339
+27	43	1733257529024107443	JohnsonTrotter_algorithm	399170beba33e8af
+0	26	1733257542771106484	CMakeFiles/JohnsonTrotter_algorithm.dir/JohnsonTrotter_algorithm.c.o	a2f2dc381816c339
+26	42	1733257542796106482	JohnsonTrotter_algorithm	399170beba33e8af
+0	28	1733258124658065870	CMakeFiles/JohnsonTrotter_algorithm.dir/JohnsonTrotter_algorithm.c.o	a2f2dc381816c339
+28	44	1733258124686065868	JohnsonTrotter_algorithm	399170beba33e8af
+1	28	1733258139963064802	CMakeFiles/JohnsonTrotter_algorithm.dir/JohnsonTrotter_algorithm.c.o	a2f2dc381816c339
+28	44	1733258139990064800	JohnsonTrotter_algorithm	399170beba33e8af
+1	28	1733258148320064218	CMakeFiles/JohnsonTrotter_algorithm.dir/JohnsonTrotter_algorithm.c.o	a2f2dc381816c339
+28	44	1733258148347064216	JohnsonTrotter_algorithm	399170beba33e8af

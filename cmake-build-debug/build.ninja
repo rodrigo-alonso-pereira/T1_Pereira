@@ -49,12 +49,6 @@ cmake_ninja_workdir = /home/rodrigo/Developer/usach/ieci/iv_s/analsis_de_algorit
 
 build cmake_object_order_depends_target_ProcesamientoCarga: phony || .
 
-build CMakeFiles/ProcesamientoCarga.dir/ProcesamientoCarga_fail.c.o: C_COMPILER__ProcesamientoCarga_unscanned_Debug /home/rodrigo/Developer/usach/ieci/iv_s/analsis_de_algoritmos_y_estructura_de_datos/T1_Pereira/ProcesamientoCarga_fail.c || cmake_object_order_depends_target_ProcesamientoCarga
-  DEP_FILE = CMakeFiles/ProcesamientoCarga.dir/ProcesamientoCarga_fail.c.o.d
-  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
-  OBJECT_DIR = CMakeFiles/ProcesamientoCarga.dir
-  OBJECT_FILE_DIR = CMakeFiles/ProcesamientoCarga.dir
-
 build CMakeFiles/ProcesamientoCarga.dir/ProcesamientoCarga.c.o: C_COMPILER__ProcesamientoCarga_unscanned_Debug /home/rodrigo/Developer/usach/ieci/iv_s/analsis_de_algoritmos_y_estructura_de_datos/T1_Pereira/ProcesamientoCarga.c || cmake_object_order_depends_target_ProcesamientoCarga
   DEP_FILE = CMakeFiles/ProcesamientoCarga.dir/ProcesamientoCarga.c.o.d
   FLAGS = -g -std=gnu11 -fdiagnostics-color=always
@@ -69,13 +63,44 @@ build CMakeFiles/ProcesamientoCarga.dir/ProcesamientoCarga.c.o: C_COMPILER__Proc
 #############################################
 # Link the executable ProcesamientoCarga
 
-build ProcesamientoCarga: C_EXECUTABLE_LINKER__ProcesamientoCarga_Debug CMakeFiles/ProcesamientoCarga.dir/ProcesamientoCarga_fail.c.o CMakeFiles/ProcesamientoCarga.dir/ProcesamientoCarga.c.o
+build ProcesamientoCarga: C_EXECUTABLE_LINKER__ProcesamientoCarga_Debug CMakeFiles/ProcesamientoCarga.dir/ProcesamientoCarga.c.o
   FLAGS = -g
   OBJECT_DIR = CMakeFiles/ProcesamientoCarga.dir
   POST_BUILD = :
   PRE_LINK = :
   TARGET_FILE = ProcesamientoCarga
   TARGET_PDB = ProcesamientoCarga.dbg
+
+# =============================================================================
+# Object build statements for EXECUTABLE target JohnsonTrotter_algorithm
+
+
+#############################################
+# Order-only phony target for JohnsonTrotter_algorithm
+
+build cmake_object_order_depends_target_JohnsonTrotter_algorithm: phony || .
+
+build CMakeFiles/JohnsonTrotter_algorithm.dir/JohnsonTrotter_algorithm.c.o: C_COMPILER__JohnsonTrotter_algorithm_unscanned_Debug /home/rodrigo/Developer/usach/ieci/iv_s/analsis_de_algoritmos_y_estructura_de_datos/T1_Pereira/JohnsonTrotter_algorithm.c || cmake_object_order_depends_target_JohnsonTrotter_algorithm
+  DEP_FILE = CMakeFiles/JohnsonTrotter_algorithm.dir/JohnsonTrotter_algorithm.c.o.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/JohnsonTrotter_algorithm.dir
+  OBJECT_FILE_DIR = CMakeFiles/JohnsonTrotter_algorithm.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target JohnsonTrotter_algorithm
+
+
+#############################################
+# Link the executable JohnsonTrotter_algorithm
+
+build JohnsonTrotter_algorithm: C_EXECUTABLE_LINKER__JohnsonTrotter_algorithm_Debug CMakeFiles/JohnsonTrotter_algorithm.dir/JohnsonTrotter_algorithm.c.o
+  FLAGS = -g
+  OBJECT_DIR = CMakeFiles/JohnsonTrotter_algorithm.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = JohnsonTrotter_algorithm
+  TARGET_PDB = JohnsonTrotter_algorithm.dbg
 
 
 #############################################
@@ -111,7 +136,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 #############################################
 # Folder: /home/rodrigo/Developer/usach/ieci/iv_s/analsis_de_algoritmos_y_estructura_de_datos/T1_Pereira/cmake-build-debug
 
-build all: phony ProcesamientoCarga
+build all: phony ProcesamientoCarga JohnsonTrotter_algorithm
 
 # =============================================================================
 # Built-in targets
