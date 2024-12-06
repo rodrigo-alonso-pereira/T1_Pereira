@@ -4,7 +4,7 @@
 #include "Interface.h"
 
 //Macro que contiene el nombre archivo .txt
-#define nombre_archivo_laberinto "procesamiento_2_2.IN"
+#define nombre_archivo_laberinto "procesamiento_3_3.IN"
 
 //Variables Globales
 int fila = 0, columna = 0, n_proceso = 0, n_lista_procesos = 0; //Variables que almacenan la cantidad de filas y columnas de la matriz.
@@ -170,9 +170,10 @@ void obtenerUnaPermutacion(int a[], int dir[], int n) {
     }
     //TODO: Aqui deberia retornar la lista de indices permutadas
     //Imprime la permutacion actual
+    printf("\n");
     for (int i = 0; i < n; i++)
         printf("%d", a[i]);
-    printf(" ");
+    printf(" -> ");
 }
 
 //Calcula el factorial de un número, que es el número total de permutaciones posibles.
@@ -185,6 +186,7 @@ int calcularFactorial(int n) {
 
 //Funcion solo llama printOnePerm() una a una de las permutaciones
 void generarPermutacion(int n) {
+    int count = 0; //Contador de factible
     //Arreglo para almacenar los elementos
     int a[n];
 
@@ -192,11 +194,12 @@ void generarPermutacion(int n) {
     int dir[n];
 
     //Llena lista a[] con numero de 0 a n.
+    printf("\n");
     for (int i = 0; i < n; i++) {
         a[i] = i + 1;
         printf("%d", a[i]);
     }
-    printf("\n");
+    printf(" -> ");
 
     //Inicializa todas las direcciones con RIGHT TO LEFT = 0.
     for (int i = 0; i < n; i++)
@@ -206,11 +209,18 @@ void generarPermutacion(int n) {
     for (int i = 1; i < calcularFactorial(n); i++) {
         obtenerUnaPermutacion(a, dir, n);
         ordenarListaProcesos(a, lista_procesos);
-        (factibilidadProcesos(lista_procesos, n_lista_procesos)) ? printf("ES FACTIBLE\n") : printf("NO ES FACTIBLE\n") ;
-
         //TODO: Aqui debo evaluar si la permutacion es factible
+        if (factibilidadProcesos(lista_procesos, n_lista_procesos)) {
+            printf("ES FACTIBLE\n");
+            imprimirLista(lista_procesos, n_lista_procesos);
+            count++;
+        } else {
+            printf("NO\n") ;
+            imprimirLista(lista_procesos, n_lista_procesos);
+        }
+
     }
-    printf("\n\nEn total son %d permutaciones\n", calcularFactorial(n));
+    printf("\n\nEn total son %d permutaciones, de las cuales son %d factibles\n", calcularFactorial(n), count);
 }
 
 void ordenarListaProcesos(int* a, proceso* lista_procesos) {
@@ -226,7 +236,7 @@ void ordenarListaProcesos(int* a, proceso* lista_procesos) {
     for (i = 0; i < n_lista_procesos; i++) {
         lista_procesos[i] = lista_aux [i];
     }
-    imprimirLista(lista_procesos, n_lista_procesos);
+    //imprimirLista(lista_procesos, n_lista_procesos);
 }
 
 int factibilidadProcesos(proceso* lista, int n) {
