@@ -10,7 +10,7 @@ typedef struct proceso {
     int secuencia;
     int tiempo_inicial;
     int tiempo_final;
-    int posicion_lista;
+    int posicion_lista; //Posicion en la lista de procesos inicial
 } proceso;
 
 /*-----------OPERACIONES-----------*/
@@ -45,5 +45,7 @@ void ordenarListaProcesos(int* a, proceso* lista_procesos);
 int factibilidadProcesos(proceso* lista, int n);
 
 int sonDistintos(proceso* lista, int n);
+
+int evaluacionProcesos(proceso* lista, int n);
 
 

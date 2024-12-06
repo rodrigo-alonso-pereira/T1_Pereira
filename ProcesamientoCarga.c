@@ -4,61 +4,67 @@
 #include "Interface.h"
 
 //Macro que contiene el nombre archivo .txt
-#define nombre_archivo_laberinto "procesamiento_3_3.IN"
+#define nombre_archivo_laberinto "procesamiento_2_2.IN"
 
 //Variables Globales
-int fila = 0, columna = 0, n_proceso = 0, n_lista_procesos = 0; //Variables que almacenan la cantidad de filas y columnas de la matriz.
-int** matriz = NULL; //Matriz que almacena los datos del archivo.
-proceso* lista_procesos = NULL; //Lista que almacena los procesos de forma secuencia de la matriz.
-int tiempo = 0; //Variable que almacena el tiempo
+int fila = 0, columna = 0, n_proceso = 0, n_lista_procesos = 0;
+//Variables que almacenan la cantidad de filas y columnas de la matriz.
+int **matriz = NULL; //Matriz que almacena los datos del archivo.
+proceso *lista_procesos = NULL; //Lista que almacena los procesos de forma secuencia de la matriz.
+int tiempo = 0; //Variable que almacena el tiempo y que debe ser el menor
 int LEFT_TO_RIGHT = 1;
 int RIGHT_TO_LEFT = 0;
 
 /*-----------OPERACIONES-----------*/
 
-void leerArchivo(char* nombre_archivo) {
+//TODO: Error en lectura de archivos 4x4 y +
+void leerArchivo(char *nombre_archivo) {
     int i = 0;
 
-    FILE* archivo = fopen(nombre_archivo, "r");
-    if (archivo == NULL){
+    FILE *archivo = fopen(nombre_archivo, "r");
+    if (archivo == NULL) {
         perror("Error fopen:");
         exit(EXIT_FAILURE);
     }
 
     //Evalua si se instancio bien el struct sb.
     struct stat sb; //Struct que almacena la informacion del archivo.
-    if (stat(nombre_archivo, &sb) == -1) { //Si es -1, hubo un error al intentar obtener la informacion del archivo.
+    if (stat(nombre_archivo, &sb) == -1) {
+        //Si es -1, hubo un error al intentar obtener la informacion del archivo.
         perror("Error stat: "); //Error descriptivo
         exit(EXIT_FAILURE); //Termina el programa con codigo de error.
     }
     //Lectura archivo y asignacion a matriz.
-    char* linea_temp = malloc(sb.st_size + 1); //Reserva memoria para la linea temporal.
-    matriz = (int**) malloc(sizeof(int*) * fila); //Reserva memoria para las filas.
-    while (fscanf(archivo, "%[^\n]\n", linea_temp) != EOF) { //%[^\n] = Leer hasta salto de linea pero sin incluirlo. EOF = End Of File
-        if (i == 0){
+    char *linea_temp = malloc(sb.st_size + 1); //Reserva memoria para la linea temporal.
+    matriz = (int **) malloc(sizeof(int *) * fila); //Reserva memoria para las filas.
+    while (fscanf(archivo, "%[^\n]\n", linea_temp) != EOF) {
+        //%[^\n] = Leer hasta salto de linea pero sin incluirlo. EOF = End Of File
+        if (i == 0) {
             sscanf(linea_temp, "%d %d\r", &fila, &n_proceso); //Lee la primera linea y guarda los valores en fila y col.
             columna = n_proceso * 2; //Proceso tiene numero y tiempo.
             n_lista_procesos = fila * n_proceso; //Cantidad de elementos de la lista de procesos.
-            lista_procesos = (proceso*)malloc(sizeof(proceso) * n_lista_procesos); //Creacion de la lista de procesos.
-            matriz = (int**) malloc(sizeof(int*) * fila); //Reserva memoria para las filas.
+            lista_procesos = (proceso *) malloc(sizeof(proceso) * n_lista_procesos); //Creacion de la lista de procesos.
+            matriz = (int **) malloc(sizeof(int *) * fila); //Reserva memoria para las filas.
             for (int j = 0; j < fila; j++)
-                matriz[j] = (int*) malloc(sizeof(int) * (columna * 2)); //Reserva memoria para las columnas. (Col * 2) porque se guardan los nro. proceso y sus tiempos.
+                matriz[j] = (int *) malloc(sizeof(int) * (columna * 2));
+            //Reserva memoria para las columnas. (Col * 2) porque se guardan los nro. proceso y sus tiempos.
         } else {
             for (int k = 0, l = 0; k < columna; k++, l += 2) {
-                sscanf(&linea_temp[l], "%d", &matriz[i-1][k]);
+                sscanf(&linea_temp[l], "%d", &matriz[i - 1][k]);
             }
         }
         i++;
     }
     imprimirMatriz(matriz, fila, columna); //Imprime la matriz.
-    if (archivo != NULL) { //Si el archivo no es nulo, se cierra.
+    if (archivo != NULL) {
+        //Si el archivo no es nulo, se cierra.
         fclose(archivo);
     }
     free(linea_temp); //Libera la memoria de la linea temporal.
     //return matriz;
 }
 
-void imprimirMatriz(int** matriz, int filas, int columnas) {
+void imprimirMatriz(int **matriz, int filas, int columnas) {
     int i, j;
     for (i = 0; i < filas; i++) {
         for (j = 0; j < columnas; j++) {
@@ -68,13 +74,18 @@ void imprimirMatriz(int** matriz, int filas, int columnas) {
     }
 }
 
-void imprimirLista(proceso* lista, int n) {
+void imprimirLista(proceso *lista, int n) {
     int i = 0;
     if (lista != NULL) {
         printf("---Lista de Procesos---\n");
         printf("[");
         for (i = 0; i < n; i++) {
-            (i == n-1) ? printf("[c=%d_%d-%d_i=%d]]\n", lista_procesos[i].carga, lista_procesos[i].proceso, lista_procesos[i].tiempo, lista_procesos[i].posicion_lista) : printf("[c=%d_%d-%d_i=%d]], ", lista_procesos[i].carga, lista_procesos[i].proceso, lista_procesos[i].tiempo, lista_procesos[i].posicion_lista);
+            (i == n - 1)
+                ? printf("[c=%d_%d-%d_i=%d]]\n",
+                         lista_procesos[i].carga, lista_procesos[i].proceso,
+                         lista_procesos[i].tiempo, lista_procesos[i].posicion_lista)
+                : printf("[c=%d_%d-%d_i=%d]], ", lista_procesos[i].carga, lista_procesos[i].proceso,
+                         lista_procesos[i].tiempo, lista_procesos[i].posicion_lista);
         }
     } else {
         printf("[imprimirLista]Error: lista_procesos no ha sido inicializada.\n");
@@ -97,9 +108,10 @@ proceso crearProceso(proceso nuevo_proceso, int carga, int proceso, int tiempo, 
 //Crea lista de procesos
 void crearListaProcesos(int n) {
     int i, j, count = 0;
-    for (i = 0; i < fila ; i++) {
-        for (j = 0; j < columna; j+=2) {
-            proceso nuevo_proceso = crearProceso(nuevo_proceso, i+1, matriz[i][j], matriz[i][j+1], i, count+1);
+    for (i = 0; i < fila; i++) {
+        for (j = 0; j < columna; j += 2) {
+            proceso nuevo_proceso = crearProceso(nuevo_proceso, i + 1, matriz[i][j],
+                                                 matriz[i][j + 1], i, count + 1);
             lista_procesos[count] = nuevo_proceso;
             count++;
         }
@@ -117,7 +129,8 @@ int buscarPosicionMovil(int a[], int n, int mobile) {
 // Encontrar el mayor número móvil en el arreglo a[].
 int obtenerMobil(int a[], int dir[], int n) {
     int mobile_prev = 0, mobile = 0;
-    for (int i = 0; i < n; i++) { //Recorre arreglo a[] de tamaño n
+    for (int i = 0; i < n; i++) {
+        //Recorre arreglo a[] de tamaño n
         // direccion 0 representa RIGHT TO LEFT (0).
         if (dir[a[i] - 1] == RIGHT_TO_LEFT && i != 0) {
             if (a[i] > a[i - 1] && a[i] > mobile_prev) {
@@ -160,20 +173,21 @@ void obtenerUnaPermutacion(int a[], int dir[], int n) {
         intercambiar(&a[pos], &a[pos - 1]); //Intercambia el numero movil con el elemento a su derecha
 
     //Cambiar las direcciones de los elementos mayores que el numero movil.
-    for (int i = 0; i < n; i++) { //Recorre arreglo a[]
-        if (a[i] > mobile) { //Si el elemento en la posicion i es mayor que el numero movil
+    for (int i = 0; i < n; i++) {
+        //Recorre arreglo a[]
+        if (a[i] > mobile) {
+            //Si el elemento en la posicion i es mayor que el numero movil
             if (dir[a[i] - 1] == LEFT_TO_RIGHT) //Si la direccion del elemento es LEFT TO RIGHT
                 dir[a[i] - 1] = RIGHT_TO_LEFT; //Cambia la direccion a RIGHT TO LEFT
             else if (dir[a[i] - 1] == RIGHT_TO_LEFT) //Si la direccion del elemento es RIGHT TO LEFT
                 dir[a[i] - 1] = LEFT_TO_RIGHT; //Cambia la direccion a LEFT TO RIGHT
         }
     }
-    //TODO: Aqui deberia retornar la lista de indices permutadas
     //Imprime la permutacion actual
-    printf("\n");
+    /*printf("\n");
     for (int i = 0; i < n; i++)
         printf("%d", a[i]);
-    printf(" -> ");
+    printf(" -> ");*/
 }
 
 //Calcula el factorial de un número, que es el número total de permutaciones posibles.
@@ -197,9 +211,15 @@ void generarPermutacion(int n) {
     printf("\n");
     for (int i = 0; i < n; i++) {
         a[i] = i + 1;
-        printf("%d", a[i]);
     }
-    printf(" -> ");
+    if (factibilidadProcesos(lista_procesos, n_lista_procesos)) {
+        printf("\n");
+        for (int l = 0; l < n_lista_procesos; l++)
+            printf("%d", a[l]);
+        printf(" -> ES FACTIBLE\n");
+        imprimirLista(lista_procesos, n_lista_procesos);
+        count++;
+    }
 
     //Inicializa todas las direcciones con RIGHT TO LEFT = 0.
     for (int i = 0; i < n; i++)
@@ -209,23 +229,26 @@ void generarPermutacion(int n) {
     for (int i = 1; i < calcularFactorial(n); i++) {
         obtenerUnaPermutacion(a, dir, n);
         ordenarListaProcesos(a, lista_procesos);
-        //TODO: Aqui debo evaluar si la permutacion es factible
+        //Evaluacion de factibilidad de lista permutada
         if (factibilidadProcesos(lista_procesos, n_lista_procesos)) {
-            printf("ES FACTIBLE\n");
+            printf("\n");
+            for (int l = 0; l < n_lista_procesos; l++)
+                printf("%d", a[l]);
+            printf(" -> ES FACTIBLE\n");
             imprimirLista(lista_procesos, n_lista_procesos);
+            //TODO: Aqui se deberia contar el tiempo y buscar el de menor tiempo
             count++;
-        } else {
-            printf("NO\n") ;
+        } /*else {
+            printf("NO\n");
             imprimirLista(lista_procesos, n_lista_procesos);
-        }
-
+        }*/
     }
     printf("\n\nEn total son %d permutaciones, de las cuales son %d factibles\n", calcularFactorial(n), count);
 }
 
-void ordenarListaProcesos(int* a, proceso* lista_procesos) {
+void ordenarListaProcesos(int *a, proceso *lista_procesos) {
     int i, j;
-    proceso* lista_aux = (proceso*)malloc(sizeof(proceso) * n_lista_procesos);
+    proceso *lista_aux = (proceso *) malloc(sizeof(proceso) * n_lista_procesos);
     for (i = 0; i < n_lista_procesos; i++) {
         for (j = 0; j < n_lista_procesos; j++) {
             if (lista_procesos[j].posicion_lista == a[i])
@@ -234,12 +257,13 @@ void ordenarListaProcesos(int* a, proceso* lista_procesos) {
     }
 
     for (i = 0; i < n_lista_procesos; i++) {
-        lista_procesos[i] = lista_aux [i];
+        lista_procesos[i] = lista_aux[i];
     }
+    free(lista_aux);
     //imprimirLista(lista_procesos, n_lista_procesos);
 }
 
-int factibilidadProcesos(proceso* lista, int n) {
+int factibilidadProcesos(proceso *lista, int n) {
     int i;
     for (i = 0; i < n; i = i + n_proceso) {
         if (!sonDistintos(&lista[i], n_proceso))
@@ -248,15 +272,21 @@ int factibilidadProcesos(proceso* lista, int n) {
     return 1; //Son distintos
 }
 
-int sonDistintos(proceso* lista, int n) {
+int sonDistintos(proceso *lista, int n) {
     for (int i = 0; i < n; i++) {
         for (int j = i + 1; j < n; j++) {
             if (lista[i].carga == lista[j].carga) {
+                return 0;
+            } else if (lista[i].proceso != lista[j].proceso) {
                 return 0;
             }
         }
     }
     return 1;
+}
+
+int calcularTiempoProcesamiento(proceso* lista, int n) {
+
 }
 
 int main() {
@@ -271,5 +301,4 @@ int main() {
     //Por cada lista de indices, armar lista de procesos y evaluar que vengan en orden [[123] [123] [123]] -> True: Calculo tiempo, False: Vuelvo a permutar
 
     //Aplicar algoritmo para calcular tiempo.
-
 }
