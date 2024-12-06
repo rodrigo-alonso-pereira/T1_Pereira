@@ -34,12 +34,14 @@ int calcularFactorial(int n);
 
 void obtenerUnaPermutacion(int a[], int dir[], int n);
 
-void intercambiar(int *a, int *b);
+void intercambiar(int* a, int* b);
 
 int obtenerMobil(int a[], int dir[], int n);
 
 int buscarPosicionMovil(int a[], int n, int mobile);
 
-int* factibilidadProcesos(int a[], int n);
+void ordenarListaProcesos(int* a, proceso* lista_procesos);
+
+int factibilidadProcesos(int* a, int n);
 
 

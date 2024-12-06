@@ -4,7 +4,7 @@
 #include "Interface.h"
 
 //Macro que contiene el nombre archivo .txt
-#define nombre_archivo_laberinto "procesamiento_3_3.IN"
+#define nombre_archivo_laberinto "procesamiento_2_2.IN"
 
 //Variables Globales
 int fila = 0, columna = 0, n_proceso = 0, n_lista_procesos = 0; //Variables que almacenan la cantidad de filas y columnas de la matriz.
@@ -74,7 +74,7 @@ void imprimirLista(proceso* lista, int n) {
         printf("---Lista de Procesos---\n");
         printf("[");
         for (i = 0; i < n; i++) {
-            (i == n-1) ? printf("[%d-%d]]\n", lista_procesos[i].proceso, lista_procesos[i].tiempo) : printf("[%d-%d], ", lista_procesos[i].proceso, lista_procesos[i].tiempo);
+            (i == n-1) ? printf("[%d-%d_%d]]\n", lista_procesos[i].proceso, lista_procesos[i].tiempo, lista_procesos[i].posicion_lista) : printf("[%d-%d_%d], ", lista_procesos[i].proceso, lista_procesos[i].tiempo, lista_procesos[i].posicion_lista);
         }
     } else {
         printf("[imprimirLista]Error: lista_procesos no ha sido inicializada.\n");
@@ -99,7 +99,7 @@ void crearListaProcesos(int n) {
     int i, j, count = 0;
     for (i = 0; i < fila ; i++) {
         for (j = 0; j < columna; j+=2) {
-            proceso nuevo_proceso = crearProceso(nuevo_proceso, i+1, matriz[i][j], matriz[i][j+1], i, count);
+            proceso nuevo_proceso = crearProceso(nuevo_proceso, i+1, matriz[i][j], matriz[i][j+1], i, count+1);
             lista_procesos[count] = nuevo_proceso;
             count++;
         }
@@ -203,10 +203,28 @@ void generarPermutacion(int n) {
         dir[i] = RIGHT_TO_LEFT;
 
     //Genera todas las permutaciones en orden
-    for (int i = 1; i < calcularFactorial(n); i++)
+    for (int i = 1; i < calcularFactorial(n); i++) {
         obtenerUnaPermutacion(a, dir, n);
+        ordenarListaProcesos(a, lista_procesos);
         //TODO: Aqui debo evaluar si la permutacion es factible
+    }
     printf("\n\nEn total son %d permutaciones\n", calcularFactorial(n));
+}
+
+void ordenarListaProcesos(int* a, proceso* lista_procesos) {
+    int i, j;
+    proceso* lista_aux = (proceso*)malloc(sizeof(proceso) * n_lista_procesos);
+    for (i = 0; i < n_lista_procesos; i++) {
+        for (j = 0; j < n_lista_procesos; j++) {
+            if (lista_procesos[j].posicion_lista == a[i])
+                lista_aux[i] = lista_procesos[j];
+        }
+    }
+
+    for (i = 0; i < n_lista_procesos; i++) {
+        lista_procesos[i] = lista_aux [i];
+    }
+    imprimirLista(lista_procesos, n_lista_procesos);
 }
 
 int main() {
