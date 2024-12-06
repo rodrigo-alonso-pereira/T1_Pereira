@@ -42,6 +42,8 @@ int buscarPosicionMovil(int a[], int n, int mobile);
 
 void ordenarListaProcesos(int* a, proceso* lista_procesos);
 
-int factibilidadProcesos(int* a, int n);
+int factibilidadProcesos(proceso* lista, int n);
+
+int sonDistintos(proceso* lista, int n);
 
 

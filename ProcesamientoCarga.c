@@ -74,7 +74,7 @@ void imprimirLista(proceso* lista, int n) {
         printf("---Lista de Procesos---\n");
         printf("[");
         for (i = 0; i < n; i++) {
-            (i == n-1) ? printf("[%d-%d_%d]]\n", lista_procesos[i].proceso, lista_procesos[i].tiempo, lista_procesos[i].posicion_lista) : printf("[%d-%d_%d], ", lista_procesos[i].proceso, lista_procesos[i].tiempo, lista_procesos[i].posicion_lista);
+            (i == n-1) ? printf("[c=%d_%d-%d_i=%d]]\n", lista_procesos[i].carga, lista_procesos[i].proceso, lista_procesos[i].tiempo, lista_procesos[i].posicion_lista) : printf("[c=%d_%d-%d_i=%d]], ", lista_procesos[i].carga, lista_procesos[i].proceso, lista_procesos[i].tiempo, lista_procesos[i].posicion_lista);
         }
     } else {
         printf("[imprimirLista]Error: lista_procesos no ha sido inicializada.\n");
@@ -206,6 +206,8 @@ void generarPermutacion(int n) {
     for (int i = 1; i < calcularFactorial(n); i++) {
         obtenerUnaPermutacion(a, dir, n);
         ordenarListaProcesos(a, lista_procesos);
+        (factibilidadProcesos(lista_procesos, n_lista_procesos)) ? printf("ES FACTIBLE\n") : printf("NO ES FACTIBLE\n") ;
+
         //TODO: Aqui debo evaluar si la permutacion es factible
     }
     printf("\n\nEn total son %d permutaciones\n", calcularFactorial(n));
@@ -225,6 +227,26 @@ void ordenarListaProcesos(int* a, proceso* lista_procesos) {
         lista_procesos[i] = lista_aux [i];
     }
     imprimirLista(lista_procesos, n_lista_procesos);
+}
+
+int factibilidadProcesos(proceso* lista, int n) {
+    int i;
+    for (i = 0; i < n; i = i + n_proceso) {
+        if (!sonDistintos(&lista[i], n_proceso))
+            return 0; //No son distintos
+    }
+    return 1; //Son distintos
+}
+
+int sonDistintos(proceso* lista, int n) {
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (lista[i].carga == lista[j].carga) {
+                return 0;
+            }
+        }
+    }
+    return 1;
 }
 
 int main() {
