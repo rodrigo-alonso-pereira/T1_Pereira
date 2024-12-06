@@ -4,10 +4,13 @@
 /*-----------OPERACIONES-----------*/
 //Struct de un proceso
 typedef struct proceso {
-    int proceso;
     int carga;
+    int proceso;
     int tiempo;
     int secuencia;
+    int tiempo_inicial;
+    int tiempo_final;
+    int posicion_lista;
 } proceso;
 
 /*-----------OPERACIONES-----------*/
@@ -21,20 +24,22 @@ void imprimirMatriz(int** matriz, int filas, int columnas);
 
 void imprimirLista(proceso* lista, int n);
 
-void crearLista();
+proceso crearProceso(proceso nuevo_proceso, int proceso, int carga, int tiempo, int secuencia, int posicion);
 
-proceso crearProceso(proceso nuevo_proceso, int proceso, int carga, int tiempo, int secuencia);
+void crearListaProcesos(int n);
 
-int evaluarEjecucionProcesoCarga(proceso* lista, int n, int proceso, int carga);
+void generarPermutacion(int n);
 
-void liberarProceso(proceso* lista, int posicion);
+int calcularFactorial(int n);
 
-void restarTiempoProceso(proceso* lista, int n, int proceso, int carga);
+void obtenerUnaPermutacion(int a[], int dir[], int n);
 
-int terminoProceso(proceso* lista, int n);
+void intercambiar(int *a, int *b);
 
-void agregarProcesoLista(proceso* lista, int n, proceso proceso, int posicion);
+int obtenerMobil(int a[], int dir[], int n);
 
-int buscarProceso(proceso* lista, int n, int proceso);
+int buscarPosicionMovil(int a[], int n, int mobile);
 
-int buscarProcesoTiempo(proceso* lista, int n, int proceso, int tiempo);
+int* factibilidadProcesos(int a[], int n);
+
+
