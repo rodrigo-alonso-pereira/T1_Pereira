@@ -4,7 +4,7 @@
 #include "Interface.h"
 
 //Macro que contiene el nombre archivo .txt
-#define nombre_archivo_laberinto "procesamiento_2_2.IN"
+#define nombre_archivo_laberinto "procesamiento_3_3.IN"
 
 //Variables Globales
 int fila = 0, columna = 0, n_proceso = 0, n_lista_procesos = 0;
@@ -36,12 +36,11 @@ void leerArchivo(char *nombre_archivo) {
     }
     //Lectura archivo y asignacion a matriz.
     char *linea_temp = malloc(sb.st_size + 1); //Reserva memoria para la linea temporal.
-    matriz = (int **) malloc(sizeof(int *) * fila); //Reserva memoria para las filas.
     while (fscanf(archivo, "%[^\n]\n", linea_temp) != EOF) {
         //%[^\n] = Leer hasta salto de linea pero sin incluirlo. EOF = End Of File
         if (i == 0) {
             sscanf(linea_temp, "%d %d\r", &fila, &n_proceso); //Lee la primera linea y guarda los valores en fila y col.
-            columna = n_proceso * 2; //Proceso tiene numero y tiempo.
+            columna = n_proceso * 2; //Cantidad de columnas de la matriz.
             n_lista_procesos = fila * n_proceso; //Cantidad de elementos de la lista de procesos.
             lista_procesos = (proceso *) malloc(sizeof(proceso) * n_lista_procesos); //Creacion de la lista de procesos.
             matriz = (int **) malloc(sizeof(int *) * fila); //Reserva memoria para las filas.
@@ -82,10 +81,15 @@ void imprimirLista(proceso *lista, int n) {
         for (i = 0; i < n; i++) {
             (i == n - 1)
                 ? printf("[c=%d_%d-%d_i=%d]]\n",
-                         lista_procesos[i].carga, lista_procesos[i].proceso,
-                         lista_procesos[i].tiempo, lista_procesos[i].posicion_lista)
-                : printf("[c=%d_%d-%d_i=%d]], ", lista_procesos[i].carga, lista_procesos[i].proceso,
-                         lista_procesos[i].tiempo, lista_procesos[i].posicion_lista);
+                         lista_procesos[i].carga,
+                         lista_procesos[i].proceso,
+                         lista_procesos[i].tiempo,
+                         lista_procesos[i].posicion_lista)
+                : printf("[c=%d_%d-%d_i=%d]], ",
+                    lista_procesos[i].carga,
+                    lista_procesos[i].proceso,
+                    lista_procesos[i].tiempo,
+                    lista_procesos[i].posicion_lista);
         }
     } else {
         printf("[imprimirLista]Error: lista_procesos no ha sido inicializada.\n");
@@ -104,9 +108,8 @@ proceso crearProceso(proceso nuevo_proceso, int carga, int proceso, int tiempo, 
     return nuevo_proceso;
 }
 
-
 //Crea lista de procesos
-void crearListaProcesos(int n) {
+void crearListaProcesos() {
     int i, j, count = 0;
     for (i = 0; i < fila; i++) {
         for (j = 0; j < columna; j += 2) {
@@ -237,6 +240,7 @@ void generarPermutacion(int n) {
             printf(" -> ES FACTIBLE\n");
             imprimirLista(lista_procesos, n_lista_procesos);
             //TODO: Aqui se deberia contar el tiempo y buscar el de menor tiempo
+            evaluacionProcesos(lista_procesos, n_lista_procesos);
             count++;
         } /*else {
             printf("NO\n");
@@ -246,6 +250,7 @@ void generarPermutacion(int n) {
     printf("\n\nEn total son %d permutaciones, de las cuales son %d factibles\n", calcularFactorial(n), count);
 }
 
+//Ordena la lista de procesos segun la permutacion
 void ordenarListaProcesos(int *a, proceso *lista_procesos) {
     int i, j;
     proceso *lista_aux = (proceso *) malloc(sizeof(proceso) * n_lista_procesos);
@@ -263,15 +268,7 @@ void ordenarListaProcesos(int *a, proceso *lista_procesos) {
     //imprimirLista(lista_procesos, n_lista_procesos);
 }
 
-int factibilidadProcesos(proceso *lista, int n) {
-    int i;
-    for (i = 0; i < n; i = i + n_proceso) {
-        if (!sonDistintos(&lista[i], n_proceso))
-            return 0; //No son distintos
-    }
-    return 1; //Son distintos
-}
-
+//Funcion que evalua si los procesos son distintos
 int sonDistintos(proceso *lista, int n) {
     for (int i = 0; i < n; i++) {
         for (int j = i + 1; j < n; j++) {
@@ -285,20 +282,156 @@ int sonDistintos(proceso *lista, int n) {
     return 1;
 }
 
-int calcularTiempoProcesamiento(proceso* lista, int n) {
-
+//Funcion que evalua si los procesos son factibles
+int factibilidadProcesos(proceso *lista, int n) {
+    int i;
+    for (i = 0; i < n; i = i + n_proceso) {
+        if (!sonDistintos(&lista[i], n_proceso))
+            return 0; //No son distintos
+    }
+    return 1; //Son distintos
 }
+
+int listaProcesosNull(proceso *lista, int n) {
+    for (int i = 0; i < n; i++) {
+        if (lista[i].carga != -1 ||
+            lista[i].proceso != -1 ||
+            lista[i].tiempo != -1 ||
+            lista[i].secuencia != -1 ||
+            lista[i].tiempo_inicial != -1 ||
+            lista[i].tiempo_final != -1 ||
+            lista[i].posicion_lista != -1) {
+            return 0; // La lista no es completamente NULL
+        }
+    }
+    return 1; // Toda la lista es NULL
+}
+
+proceso procesoNull(proceso proceso) {
+    proceso.carga = -1;
+    proceso.proceso = -1;
+    proceso.tiempo = -1;
+    proceso.secuencia = -1;
+    proceso.tiempo_inicial = -1;
+    proceso.tiempo_final = -1;
+    proceso.posicion_lista = -1;
+    return proceso;
+}
+
+void imprimirMatrizProceso(proceso** matriz, int fila, int columna) {
+    int i, j;
+    printf("\n");
+    for (i = 0; i < fila; i++) {
+        for (j = 0; j < columna; j++) {
+            printf("[c=%d_%d-%d_S=%d_ti=%d-tf=%d] ",
+                matriz[i][j].carga,
+                matriz[i][j].proceso,
+                matriz[i][j].tiempo,
+                matriz[i][j].secuencia,
+                matriz[i][j].tiempo_inicial,
+                matriz[i][j].tiempo_final);
+        }
+        printf("\n");
+    }
+}
+
+/*proceso** crearProcesoMatriz(proceso *lista, proceso **matriz, int fila, int columna) {
+    int count = 0;
+    matriz = (proceso**) malloc(sizeof(proceso *) * fila);
+    for (int i = 0; i < fila; i++) {
+        matriz[i] = (proceso *) malloc(sizeof(proceso) * columna);
+        for (int j = 0; j < columna; j++) {
+            matriz[i][j] = lista[count];
+            count++;
+        }
+    }
+    imprimirMatrizProceso(matriz, fila, columna);
+    return matriz;
+}*/
+
+int maquinaVacia(proceso** matriz, int fila) {
+    if (matriz[fila][0].carga == -1 ||
+        matriz[fila][0].proceso == -1 ||
+        matriz[fila][0].tiempo == -1 ||
+        matriz[fila][0].secuencia == -1 ||
+        matriz[fila][0].tiempo_inicial == -1 ||
+        matriz[fila][0].tiempo_final == -1 ||
+        matriz[fila][0].posicion_lista == -1)
+        return 1;
+    return 0;
+}
+
+int buscarProcesoAnterior(proceso** matriz, int fila, int columna, int secuencia) {
+    return 1;
+}
+
+
+//TODO: Evaluar que retorna esta funcion.
+void evaluacionProcesos(proceso *lista, int n) {
+    int count = 0;
+    proceso **matriz_aux = malloc(sizeof(proceso *) * fila);; //Reserva memoria para las filas de matriz aux.
+    proceso *lista_proceso_aux = malloc(sizeof(proceso) * n); //Reserva memoria para la lista de procesos aux.
+    for (int i = 0; i < n; i++)
+        lista_proceso_aux[i] = lista[i]; //Copia la lista de procesos a la lista de procesos aux.
+
+    proceso nuevo_proceso = {};
+    for (int i = 0; i < fila; i++) {
+        matriz_aux[i] = (proceso *) malloc(sizeof(proceso) * n_proceso);
+        for (int j = 0; j < n_proceso; j++) {
+            matriz_aux[i][j] = procesoNull(nuevo_proceso);
+        }
+    }
+    //Mientras la lista de procesos no sea completamente NULL
+    while (!listaProcesosNull(lista_proceso_aux, n)) {
+        for (int i = 0; i < fila; i++) { //Recorre las filas
+            //matriz_aux[i] = (proceso*) malloc(sizeof(proceso) * n_proceso);
+            for (int j = 0; j < columna; j++) { //Recorre las columnas
+                if (lista_proceso_aux[count].proceso == 1) { //Si el proceso es el primero
+                    matriz_aux[i][j] = lista_proceso_aux[count]; //Asigna el proceso a la matriz auxiliar
+                    if (j == 0) { //Si es la primera columna
+                        matriz_aux[i][j].tiempo_final = matriz_aux[i][j].tiempo_inicial + matriz_aux[i][j].tiempo; //Calcula el tiempo final
+                        //lista_proceso_aux[count] = procesoNull(matriz_aux[i][j]); //Asigna NULL a la lista de procesos auxiliar
+                    } else {
+                        matriz_aux[i][j].tiempo_inicial = matriz_aux[i][j-1].tiempo_final; //Asigna tiempo inicial como el final anterior
+                        matriz_aux[i][j].tiempo_final = matriz_aux[i][j].tiempo_inicial + matriz_aux[i][j].tiempo; //Calcula el tiempo final
+                    }
+                    lista_proceso_aux[count] = procesoNull(matriz_aux[i][j]); //Asigna NULL a la lista de procesos auxiliar
+                } else { //Si el proceso no es el primero
+                    //TODO: Revisar desde aqui
+                    if (maquinaVacia(matriz_aux, count)) { //Si la maquina esta vacia
+                        if (lista_proceso_aux[count].secuencia == 0) { //Si la secuencia es la menor
+                            matriz_aux[i][j] = lista_proceso_aux[count]; //Asigna el proceso a la matriz auxiliar
+                            matriz_aux[i][j].tiempo_final = matriz_aux[i][j].tiempo_inicial + matriz_aux[i][j].tiempo;
+                        } else { //Si la secuencia no es la menor
+                            if (buscarProcesoAnterior(matriz_aux, fila, n_proceso, lista_proceso_aux[count].secuencia)) { //El proceso anterior existe?
+
+                            }
+                        }
+                    } else { //Si la maquina no esta vacia
+
+                    }
+                }
+                count++;
+            }
+            break;
+        }
+        break;
+    }
+    imprimirMatrizProceso(matriz_aux, fila, n_proceso);
+    free(matriz_aux);
+    free(lista_proceso_aux);
+}
+
 
 int main() {
     leerArchivo(nombre_archivo_laberinto); //Lee el archivo y asigna los valores a la matriz.
-
-    //Pasar Matriz a Lista
-    crearListaProcesos(n_lista_procesos);
-
-    //Implementar Johnson and Trotter algorithm -> Entrega lista de indices permutado
+    crearListaProcesos(); //Pasar Matriz a Lista
     generarPermutacion(n_lista_procesos);
+    //Implementar Johnson and Trotter algorithm -> Entrega lista de indices permutado
 
     //Por cada lista de indices, armar lista de procesos y evaluar que vengan en orden [[123] [123] [123]] -> True: Calculo tiempo, False: Vuelvo a permutar
 
     //Aplicar algoritmo para calcular tiempo.
+
+    //Entregar tiempo optimo.
 }

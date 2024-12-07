@@ -26,7 +26,7 @@ void imprimirLista(proceso* lista, int n);
 
 proceso crearProceso(proceso nuevo_proceso, int proceso, int carga, int tiempo, int secuencia, int posicion);
 
-void crearListaProcesos(int n);
+void crearListaProcesos();
 
 void generarPermutacion(int n);
 
@@ -46,6 +46,18 @@ int factibilidadProcesos(proceso* lista, int n);
 
 int sonDistintos(proceso* lista, int n);
 
-int evaluacionProcesos(proceso* lista, int n);
+void evaluacionProcesos(proceso* lista, int n);
 
+int listaProcesosNull(proceso* lista, int n);
 
+proceso procesoNull(proceso proceso);
+
+proceso** crearProcesoMatriz(proceso *lista, proceso **matriz, int fila, int columna);
+
+void imprimirMatrizProceso(proceso** matriz, int fila, int columna);
+
+int maquinaVacia(proceso** matriz, int fila);
+
+int buscarTiempoSecuenciaAnterior(proceso** matriz, int fila, int columna);
+
+int buscarProcesoAnterior(proceso** matriz, int fila, int columna, int secuencia);
