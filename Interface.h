@@ -52,7 +52,7 @@ void evaluacionProcesos(proceso* lista, int n);
 
 int listaProcesosNull(proceso* lista, int n);
 
-proceso procesoNull(proceso proceso);
+proceso procesoNull();
 
 proceso** crearProcesoMatriz(proceso *lista, proceso **matriz, int fila, int columna);
 
@@ -63,3 +63,9 @@ int maquinaVacia(proceso** matriz, int fila);
 int buscarTiempoSecuenciaAnterior(proceso** matriz, int fila, int columna);
 
 int buscarProcesoAnterior(proceso** matriz, int fila, int columna, proceso proceso);
+
+void imprimirProceso(proceso proceso);
+
+int obtenerMayorTiempo(proceso** matriz, int fila, int columna);
+
+void imprimirSecuenciaListaProcesos(proceso* lista, int n);
