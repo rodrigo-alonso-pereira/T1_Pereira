@@ -44,7 +44,9 @@ void ordenarListaProcesos(int* a, proceso* lista_procesos);
 
 int factibilidadProcesos(proceso* lista, int n);
 
-int sonDistintos(proceso* lista, int n);
+int sonCargasDistintas(proceso* lista, int n);
+
+int sonProcesosIguales(proceso* lista, int n, int proceso);
 
 void evaluacionProcesos(proceso* lista, int n);
 
@@ -60,4 +62,4 @@ int maquinaVacia(proceso** matriz, int fila);
 
 int buscarTiempoSecuenciaAnterior(proceso** matriz, int fila, int columna);
 
-int buscarProcesoAnterior(proceso** matriz, int fila, int columna, int secuencia);
+int buscarProcesoAnterior(proceso** matriz, int fila, int columna, proceso proceso);
