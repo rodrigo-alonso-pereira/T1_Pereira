@@ -252,13 +252,9 @@ void generarPermutacion(int n) {
                 printf("%d", a[l]);
             printf(" -> ES FACTIBLE\n");
             imprimirLista(lista_procesos, n_lista_procesos);
-            //TODO: Aqui se deberia contar el tiempo y buscar el de menor tiempo
             evaluacionProcesos(lista_procesos, n_lista_procesos);
             count++;
-        } /*else {
-            printf("NO\n");
-            imprimirLista(lista_procesos, n_lista_procesos);
-        }*/
+        }
     }
     printf("\n\nEn total son %d permutaciones, de las cuales son %d factibles\n", calcularFactorial(n), count);
 }
@@ -402,13 +398,23 @@ int buscarProcesoAnterior(proceso **matriz, int fila, int columna, proceso proce
 int obtenerMayorTiempo(proceso** matriz, int fila, int columna) {
     int tiempo = 0;
     for (int i = 0; i < fila; i++) {
-        if (matriz[i][columna].tiempo_final > tiempo)
-            tiempo = matriz[i][columna].tiempo_final;
+        for (int j = 0; j < columna; j++) {
+            if (matriz[i][j].tiempo_final > tiempo)
+                tiempo = matriz[i][j].tiempo_final;
+        }
     }
     return tiempo;
 }
 
-//TODO: Evaluar que retorna esta funcion.
+int buscarTiempoAnteriorFila(proceso** matriz, int fila, int columna) {
+    int tiempo_final = 0;
+    for (int i = 0; i < columna; i++) {
+        if (matriz[fila][i].tiempo_final != -1 && matriz[fila][i].tiempo_final > tiempo_final)
+            tiempo_final = matriz[fila][i].tiempo_final;
+    }
+    return tiempo_final;
+}
+
 void evaluacionProcesos(proceso *lista, int n) {
     proceso **matriz_aux = malloc(sizeof(proceso *) * fila); //Reserva memoria para las filas de matriz aux.
     proceso *lista_proceso_aux = malloc(sizeof(proceso) * n); //Reserva memoria para la lista de procesos aux.
@@ -431,7 +437,6 @@ void evaluacionProcesos(proceso *lista, int n) {
                 //imprimirProceso(lista_proceso_aux[count]); //BORRAR
                 //printf("\n"); //BORRAR
                 if (lista_proceso_aux[count].carga != -1) { //Si el proceso no esta null (-1)
-                    //TODO: Cambiar matriz[i][j] por un metodo que siempre agregue lo mas a la izq.
                     if (maquinaVacia(matriz_aux, lista_proceso_aux[count].proceso - 1)) { //Si la maquina esta vacia
                         if (lista_proceso_aux[count].secuencia == 0) { //Si la secuencia ES la menor
                             //printf("MAQUINA VACIA Y SECUENCIA MENOR -> "); //BORRAR
@@ -473,7 +478,9 @@ void evaluacionProcesos(proceso *lista, int n) {
                             //imprimirProceso(lista_proceso_aux[count]); //BORRAR
                             //printf("\n"); //BORRAR
                             matriz_aux[i][j] = lista_proceso_aux[count]; //Asigna el proceso a la matriz auxiliar
-                            matriz_aux[i][j].tiempo_inicial = matriz_aux[i][j-1].tiempo_final; //Tiempo inicial es tiempo de proceso anterior
+                            int tiempo_final_ant = buscarTiempoAnteriorFila(matriz_aux, lista_proceso_aux[count].proceso - 1, n_proceso);
+                            matriz_aux[i][j].tiempo_inicial = tiempo_final_ant; //Tiempo inicial es tiempo de proceso anterior
+                            //matriz_aux[i][j].tiempo_inicial = matriz_aux[i][j-1].tiempo_final; //Tiempo inicial es tiempo de proceso anterior
                             matriz_aux[i][j].tiempo_final = matriz_aux[i][j].tiempo_inicial + matriz_aux[i][j].tiempo; //Sumo tiempos
                             lista_proceso_aux[count] = procesoNull(); //Asigna NULL directamente al proceso de la lista de procesos auxiliar
                             //imprimirMatrizProceso(matriz_aux, fila, n_proceso); //BORRAR
@@ -488,8 +495,9 @@ void evaluacionProcesos(proceso *lista, int n) {
                                 //imprimirProceso(lista_proceso_aux[count]); //BORRAR
                                 //printf("\n"); //BORRAR
                                 matriz_aux[i][j] = lista_proceso_aux[count]; //Asigna el proceso a la matriz auxiliar
-                                if (matriz_aux[i][j-1].tiempo_final >= t_final_sec_aux) { //Si el tiempo final anterior es mayor que el tiempo final de la secuencia anterior
-                                    matriz_aux[i][j].tiempo_inicial = matriz_aux[i][j-1].tiempo_final; //Asigna tiempo inicial el tiempo final del anterior [C1_2-3_S1_ti-3_tf-0]
+                                int tiempo_final_ant = buscarTiempoAnteriorFila(matriz_aux, lista_proceso_aux[count].proceso - 1, n_proceso);
+                                if (tiempo_final_ant >= t_final_sec_aux) { //Si el tiempo final anterior es mayor que el tiempo final de la secuencia anterior
+                                    matriz_aux[i][j].tiempo_inicial = tiempo_final_ant; //Asigna tiempo inicial el tiempo final del anterior [C1_2-3_S1_ti-3_tf-0]
                                 } else { //Tiempo final secuencia anterios es mayor
                                     matriz_aux[i][j].tiempo_inicial = t_final_sec_aux; //Se asigna tiempo secuencia anterior como inicial
                                 }
@@ -516,7 +524,7 @@ void evaluacionProcesos(proceso *lista, int n) {
     }
     printf("\nMatriz Final");
     imprimirMatrizProceso(matriz_aux, fila, n_proceso);
-    int tiempo_parcial = obtenerMayorTiempo(matriz_aux, fila, n_proceso -1);
+    int tiempo_parcial = obtenerMayorTiempo(matriz_aux, fila, n_proceso);
     if (tiempo_menor > tiempo_parcial) {
         printf("Nuevo tiempo menor encontrado %d\n", tiempo_parcial);
         tiempo_menor = tiempo_parcial;

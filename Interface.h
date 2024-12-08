@@ -69,3 +69,5 @@ void imprimirProceso(proceso proceso);
 int obtenerMayorTiempo(proceso** matriz, int fila, int columna);
 
 void imprimirSecuenciaListaProcesos(proceso* lista, int n);
+
+int buscarTiempoAnteriorFila(proceso** matriz, int fila, int columna);
