@@ -2,6 +2,7 @@
 // Johnson and Trotter algorithm.
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 int LEFT_TO_RIGHT = 1;
 int RIGHT_TO_LEFT = 0;
@@ -70,15 +71,15 @@ void printOnePerm(int a[], int dir[], int n) {
         }
     }
     //Imprime la permutacion actual
-    for (int i = 0; i < n; i++)
+    /*for (int i = 0; i < n; i++)
         printf("%d", a[i]);
-    printf(" ");
+    printf(" ");*/
 }
 
 //Calcula el factorial de un número, que es el número total de permutaciones posibles.
-int fact(int n)
+long long int fact(int n)
 {
-    int res = 1;
+    long long int res = 1;
     for (int i = 1; i <= n; i++)
         res = res * i;
     return res;
@@ -95,7 +96,7 @@ void printPermutation(int n) {
     //Llena lista a[] con numero de 0 a n.
     for (int i = 0; i < n; i++) {
         a[i] = i + 1;
-        printf("%d", a[i]);
+        printf("%d-", a[i]);
     }
     printf("\n");
 
@@ -104,14 +105,30 @@ void printPermutation(int n) {
         dir[i] = RIGHT_TO_LEFT;
 
     //Genera todas las permutaciones en orden
-    for (int i = 1; i < fact(n); i++)
+    //TODO: Puede que int i este limitando el max de permutaciones, ya que deberia ser long long int/
+    long long int flag= 1000;
+    for (long long int i = 1; i < fact(n); i++) {
         printOnePerm(a, dir, n);
-    printf("\n\nEn total son %d permutaciones\n", fact(n));
+        if (i == flag) {
+            printf("Iteracion %lli\n", flag);
+            flag *=10;
+            if (flag == 1000000000)
+                break;
+        }
+    }
+    printf("\n\nEn total son %lli permutaciones\n", fact(n));
 }
 
-int main()
-{
-    int n = 9; //Numero de elementos en la permutacion
+int main() {
+    clock_t clock_ini, clock_fin;
+    float tiempo_algoritmo = 0;
+    clock_ini = clock();
+
+    int n = 16; //Numero de elementos en la permutacion
     printPermutation(n);
+
+    clock_fin = clock();
+    tiempo_algoritmo = (float)((clock_fin - clock_ini) / CLOCKS_PER_SEC);
+    printf("\nTiempo del algoritmo en segundos: %.2f  \n", tiempo_algoritmo);
     return 0;
 }

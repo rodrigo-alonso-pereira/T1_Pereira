@@ -102,6 +102,37 @@ build JohnsonTrotter_algorithm: C_EXECUTABLE_LINKER__JohnsonTrotter_algorithm_De
   TARGET_FILE = JohnsonTrotter_algorithm
   TARGET_PDB = JohnsonTrotter_algorithm.dbg
 
+# =============================================================================
+# Object build statements for EXECUTABLE target test
+
+
+#############################################
+# Order-only phony target for test
+
+build cmake_object_order_depends_target_test: phony || .
+
+build CMakeFiles/test.dir/test.c.o: C_COMPILER__test_unscanned_Debug /home/rodrigo/Developer/usach/ieci/iv_s/analsis_de_algoritmos_y_estructura_de_datos/T1_Pereira/test.c || cmake_object_order_depends_target_test
+  DEP_FILE = CMakeFiles/test.dir/test.c.o.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/test.dir
+  OBJECT_FILE_DIR = CMakeFiles/test.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target test
+
+
+#############################################
+# Link the executable test
+
+build test: C_EXECUTABLE_LINKER__test_Debug CMakeFiles/test.dir/test.c.o
+  FLAGS = -g
+  OBJECT_DIR = CMakeFiles/test.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = test
+  TARGET_PDB = test.dbg
+
 
 #############################################
 # Utility command for edit_cache
@@ -136,7 +167,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 #############################################
 # Folder: /home/rodrigo/Developer/usach/ieci/iv_s/analsis_de_algoritmos_y_estructura_de_datos/T1_Pereira/cmake-build-debug
 
-build all: phony ProcesamientoCarga JohnsonTrotter_algorithm
+build all: phony ProcesamientoCarga JohnsonTrotter_algorithm test
 
 # =============================================================================
 # Built-in targets

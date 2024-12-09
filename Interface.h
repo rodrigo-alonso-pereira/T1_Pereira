@@ -30,7 +30,7 @@ void crearListaProcesos();
 
 void generarPermutacion(int n);
 
-int calcularFactorial(int n);
+long long int calcularFactorial(int n);
 
 void obtenerUnaPermutacion(int a[], int dir[], int n);
 

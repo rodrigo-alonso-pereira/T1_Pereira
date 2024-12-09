@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include "Interface.h"
+#include <time.h>
 
 //Macro que contiene el nombre archivo .txt
 #define nombre_archivo_laberinto "procesamiento_3_3.IN"
@@ -12,6 +13,7 @@ int fila = 0, columna = 0, n_proceso = 0, n_lista_procesos = 0;
 int **matriz = NULL; //Matriz que almacena los datos del archivo.
 proceso *lista_procesos = NULL; //Lista que almacena los procesos de forma secuencia de la matriz.
 int tiempo_menor = 1000000000; //Variable que almacena el tiempo y que debe ser el menor
+int contador_tiempo = 0; //Contador de tiempos menores
 int LEFT_TO_RIGHT = 1;
 int RIGHT_TO_LEFT = 0;
 
@@ -44,23 +46,28 @@ void leerArchivo(char *nombre_archivo) {
             n_lista_procesos = fila * n_proceso; //Cantidad de elementos de la lista de procesos.
             lista_procesos = (proceso *) malloc(sizeof(proceso) * n_lista_procesos); //Creacion de la lista de procesos.
             matriz = (int **) malloc(sizeof(int *) * fila); //Reserva memoria para las filas.
-            for (int j = 0; j < fila; j++)
+            for (int j = 0; j < fila; j++) //Reserva memoria para las columnas. (Col * 2) porque se guardan los nro. proceso y sus tiempos.
                 matriz[j] = (int *) malloc(sizeof(int) * (columna * 2));
-            //Reserva memoria para las columnas. (Col * 2) porque se guardan los nro. proceso y sus tiempos.
         } else {
+            char *ptr = linea_temp; // Puntero temporal para recorrer la línea
+            for (int k = 0; k < columna; k++) {
+                sscanf(ptr, "%d", &matriz[i - 1][k]);
+                while (*ptr != ' ' && *ptr != '\0') ptr++; // Avanza al siguiente espacio o fin de línea
+                if (*ptr == ' ') ptr++; // Salta el espacio
+            }
+            /*
             for (int k = 0, l = 0; k < columna; k++, l += 2) {
                 sscanf(&linea_temp[l], "%d", &matriz[i - 1][k]);
             }
+            */
         }
         i++;
     }
     imprimirMatriz(matriz, fila, columna); //Imprime la matriz.
-    if (archivo != NULL) {
-        //Si el archivo no es nulo, se cierra.
+    if (archivo != NULL) { //Si el archivo no es nulo, se cierra.
         fclose(archivo);
     }
     free(linea_temp); //Libera la memoria de la linea temporal.
-    //return matriz;
 }
 
 void imprimirMatriz(int **matriz, int filas, int columnas) {
@@ -207,8 +214,8 @@ void obtenerUnaPermutacion(int a[], int dir[], int n) {
 }
 
 //Calcula el factorial de un número, que es el número total de permutaciones posibles.
-int calcularFactorial(int n) {
-    int res = 1;
+long long int calcularFactorial(int n) {
+    long long int res = 1;
     for (int i = 1; i <= n; i++)
         res = res * i;
     return res;
@@ -256,7 +263,7 @@ void generarPermutacion(int n) {
             count++;
         }
     }
-    printf("\n\nEn total son %d permutaciones, de las cuales son %d factibles\n", calcularFactorial(n), count);
+    printf("\n\nEn total son %lli permutaciones, de las cuales son %d factibles\n", calcularFactorial(n), count);
 }
 
 //Ordena la lista de procesos segun la permutacion
@@ -522,13 +529,17 @@ void evaluacionProcesos(proceso *lista, int n) {
             }
         }
     }
-    printf("\nMatriz Final");
-    imprimirMatrizProceso(matriz_aux, fila, n_proceso);
+    //printf("\nMatriz Final");
+    //imprimirMatrizProceso(matriz_aux, fila, n_proceso);
     int tiempo_parcial = obtenerMayorTiempo(matriz_aux, fila, n_proceso);
+    printf("Tiempo de esta permutacion es de: %d\n", tiempo_parcial);
+
     if (tiempo_menor > tiempo_parcial) {
-        printf("Nuevo tiempo menor encontrado %d\n", tiempo_parcial);
+        printf("***Nuevo tiempo menor encontrado %d***\n", tiempo_parcial);
         tiempo_menor = tiempo_parcial;
-    }
+        contador_tiempo = 1;
+    } else if (tiempo_menor == tiempo_parcial)
+        contador_tiempo++;
 
     // Liberar memoria
     for (int i = 0; i < fila; i++) { //Liberar memoria de cada fila de matriz_aux
@@ -538,20 +549,21 @@ void evaluacionProcesos(proceso *lista, int n) {
     free(lista_proceso_aux);
 }
 
-
 int main() {
+    clock_t clock_ini, clock_fin;
+    float tiempo_algoritmo = 0;
+    clock_ini = clock();
     leerArchivo(nombre_archivo_laberinto); //Lee el archivo y asigna los valores a la matriz.
     crearListaProcesos(); //Pasar Matriz a Lista
-    generarPermutacion(n_lista_procesos);
-    //Implementar Johnson and Trotter algorithm -> Entrega lista de indices permutado
+    generarPermutacion(n_lista_procesos); //Johnson and Trotter algorithm
 
-    //Por cada lista de indices, armar lista de procesos y evaluar que vengan en orden [[123] [123] [123]] -> True: Calculo tiempo, False: Vuelvo a permutar
-
-    //Aplicar algoritmo para calcular tiempo.
-
-    //Entregar tiempo optimo.
     printf("\n");
     printf("--------------------------------------------------------\n");
-    printf("El tiempo optimo para esta matriz %dx%d es de %d\n", fila, n_proceso, tiempo_menor);
+    printf("*** El tiempo optimo para esta matriz %dx%d es de %d ***\n", fila, n_proceso, tiempo_menor);
     printf("--------------------------------------------------------\n");
+    printf("\n");
+    printf("-> Existen %d formas de ordenar la carga para obtener el tiempo de %d\n", contador_tiempo, tiempo_menor);
+    clock_fin = clock();
+	tiempo_algoritmo = (float)((clock_fin - clock_ini) / CLOCKS_PER_SEC);
+	printf("\nTiempo del algoritmo en segundos: %.2f  \n", tiempo_algoritmo);
 }
