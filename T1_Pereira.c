@@ -249,7 +249,7 @@ void generarPermutacion(int n) {
         dir[i] = RIGHT_TO_LEFT;
 
     //Genera todas las permutaciones en orden
-    for (int i = 1; i < calcularFactorial(n); i++) {
+    for (long long int i = 1; i < calcularFactorial(n); i++) {
         obtenerUnaPermutacion(a, dir, n);
         ordenarListaProcesos(a, lista_procesos);
         //Evaluacion de factibilidad de lista permutada
